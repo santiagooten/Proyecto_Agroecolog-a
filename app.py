@@ -218,7 +218,7 @@ with tab3:
     with sub1:
         sistema_sel = st.radio(
             "Tipo de sistema hortícola",
-            ["Todos", "Hortícola intensivo", "Hortícola", "Hortícola;Policultivo"],
+            ["Todos", "Hortícola", "Policultivo"],
             horizontal=True
         )
 
