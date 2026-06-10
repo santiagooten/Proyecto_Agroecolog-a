@@ -3,66 +3,38 @@ import pandas as pd
 
 st.set_page_config(page_title="Policultivos Uruguay", page_icon="🌱", layout="wide")
 
-# --- CSS PERSONALIZADO ---
 st.markdown("""
 <style>
-    .stApp {
-        background-color: #f9f6f0;
-    }
+    .stApp { background-color: #f9f6f0; }
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: #e8f0e4;
-        padding: 6px;
-        border-radius: 12px;
+        gap: 8px; background-color: #e8f0e4;
+        padding: 6px; border-radius: 12px;
     }
     .stTabs [data-baseweb="tab"] {
-        border-radius: 8px;
-        padding: 8px 16px;
-        color: #2d5a27;
-        font-weight: 500;
+        border-radius: 8px; padding: 8px 16px;
+        color: #2d5a27; font-weight: 500;
     }
     .stTabs [aria-selected="true"] {
-        background-color: #2d5a27 !important;
-        color: white !important;
+        background-color: #2d5a27 !important; color: white !important;
     }
     .streamlit-expanderHeader {
-        background-color: #e8f0e4;
-        border-radius: 8px;
-        color: #2d5a27;
-        font-weight: 500;
+        background-color: #e8f0e4; border-radius: 8px;
+        color: #2d5a27; font-weight: 500;
     }
-    .streamlit-expanderContent {
-        border-left: 3px solid #7fb069;
-        padding-left: 12px;
-    }
+    .streamlit-expanderContent { border-left: 3px solid #7fb069; padding-left: 12px; }
     [data-testid="stMetric"] {
-        background-color: #e8f0e4;
-        border-radius: 10px;
-        padding: 12px 16px;
-        border-left: 4px solid #4a7c59;
+        background-color: #e8f0e4; border-radius: 10px;
+        padding: 12px 16px; border-left: 4px solid #4a7c59;
     }
-    .stSelectbox > div > div {
-        border-color: #4a7c59;
-        border-radius: 8px;
-    }
-    hr {
-        border-color: #c5d9be;
-    }
-    .stInfo {
-        background-color: #e8f0e4;
-        border-left-color: #4a7c59;
-    }
+    .stSelectbox > div > div { border-color: #4a7c59; border-radius: 8px; }
+    hr { border-color: #c5d9be; }
 </style>
 """, unsafe_allow_html=True)
 
-# --- BANNER ---
 st.markdown("""
 <div style="
     background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 60%, #7fb069 100%);
-    border-radius: 16px;
-    padding: 40px 48px;
-    margin-bottom: 28px;
-    color: white;
+    border-radius: 16px; padding: 40px 48px; margin-bottom: 28px; color: white;
 ">
     <div style="font-size: 2.4rem; font-weight: 700; letter-spacing: -0.5px;">
         🌱 Planificador de Policultivos
@@ -70,7 +42,7 @@ st.markdown("""
     <div style="font-size: 1.1rem; opacity: 0.9; font-weight: 400; margin-top: 8px;">
         Herramienta agroecológica para Uruguay · Asociaciones de cultivos basadas en evidencia científica
     </div>
-    <div style="display: flex; gap: 20px; margin-top: 12px; font-size: 0.9rem; opacity: 0.8;">
+    <div style="display: flex; gap: 20px; margin-top: 12px; font-size: 0.9rem; opacity: 0.8; flex-wrap: wrap;">
         <span>🌿 Cultivos hortícolas</span>
         <span>🌸 Plantas funcionales</span>
         <span>🌳 Sistemas agroforestales</span>
@@ -81,11 +53,9 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- DATOS ---
 @st.cache_data
 def cargar_datos():
-    xl = pd.read_excel("Base_Datos_Agroecologica_Uruguay_V3.xlsx", sheet_name=None)
-    return xl
+    return pd.read_excel("Base_Datos_Agroecologica_Uruguay.xlsx", sheet_name=None)
 
 datos = cargar_datos()
 cultivos = datos["Cultivos_Horticolas"]
@@ -95,18 +65,15 @@ silvopastoril = datos["Silvopastoril"]
 compatibilidades = datos["Compatibilidades"]
 
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "🌿 Por planta",
-    "📅 Por estación",
-    "🌾 Por sistema",
-    "🌸 Plantas funcionales",
-    "🔍 Compatibilidades"
+    "🌿 Por planta", "📅 Por estación", "🌾 Por sistema",
+    "🌸 Plantas funcionales", "🔍 Compatibilidades"
 ])
 
 # --- TAB 1: POR PLANTA ---
 with tab1:
     col1, col2 = st.columns([1, 2])
     with col1:
-        planta_sel = st.selectbox("Elegí un cultivo", cultivos["Nombre_comun"].tolist())
+        planta_sel = st.selectbox("Elegí un cultivo", sorted(cultivos["Nombre_comun"].tolist()))
 
     fila = cultivos[cultivos["Nombre_comun"] == planta_sel].iloc[0]
 
@@ -119,13 +86,15 @@ with tab1:
 
     st.divider()
 
-    col_a, col_b, col_c = st.columns(3)
+    col_a, col_b, col_c, col_d = st.columns(4)
     with col_a:
-        st.metric("🌡️ Temp. mínima", f"{fila['Temp_min_C']}°C")
+        st.metric("🌡️ Temp. óptima", f"{fila['Temp_optima_C']}°C")
     with col_b:
-        st.metric("✅ Temp. óptima", f"{fila['Temp_optima_C']}°C")
+        st.metric("💧 Req. hídrico", fila["Req_hidrico"])
     with col_c:
-        st.metric("🔥 Temp. máxima", f"{fila['Temp_max_C']}°C")
+        st.metric("🌿 Req. nutricional", fila["Req_nutricional"])
+    with col_d:
+        st.metric("🔬 Función ecológica", fila["Funcion_ecologica"])
 
     st.divider()
 
@@ -145,8 +114,12 @@ with tab1:
                         r = rel.iloc[0]
                         st.write(f"**Mecanismo:** {r['Mecanismo']}")
                         st.write(f"**Intensidad:** {r['Intensidad']}")
+                        beneficio_a = r['Beneficio_A'] if pd.notna(r['Beneficio_A']) else "—"
+                        beneficio_b = r['Beneficio_B'] if pd.notna(r['Beneficio_B']) else "—"
+                        st.write(f"**Beneficio para {r['Especie_A']}:** {beneficio_a}")
+                        st.write(f"**Beneficio para {r['Especie_B']}:** {beneficio_b}")
                         if pd.notna(r["Fuente"]):
-                            st.caption(f"Fuente: {r['Fuente']}")
+                            st.caption(f"📚 {r['Fuente']}")
                     else:
                         st.write("Combinación beneficiosa registrada en la base de datos.")
         else:
@@ -165,8 +138,9 @@ with tab1:
                     if not rel.empty:
                         r = rel.iloc[0]
                         st.write(f"**Motivo:** {r['Mecanismo']}")
+                        st.write(f"**Intensidad:** {r['Intensidad']}")
                         if pd.notna(r["Fuente"]):
-                            st.caption(f"Fuente: {r['Fuente']}")
+                            st.caption(f"📚 {r['Fuente']}")
                     else:
                         st.write("Combinación negativa registrada en la base de datos.")
         else:
@@ -179,18 +153,19 @@ with tab1:
 
 # --- TAB 2: POR ESTACIÓN ---
 with tab2:
+    # La nueva BD solo tiene Verano, Invierno, Otoño y Todo el año
     estacion_sel = st.selectbox(
         "¿Qué estación querés planificar?",
-        ["Verano", "Otoño", "Invierno", "Primavera"]
+        ["Verano", "Otoño", "Invierno", "Todo el año"]
     )
 
-    st.markdown(f"#### Cultivos para sembrar en {estacion_sel}")
     resultado = cultivos[cultivos["Estacion_siembra"].str.contains(estacion_sel, na=False)]
+    st.markdown(f"#### Cultivos para {estacion_sel}")
+    st.caption(f"{len(resultado)} cultivos encontrados")
 
     if resultado.empty:
         st.info("No hay cultivos registrados para esta estación.")
     else:
-        st.caption(f"{len(resultado)} cultivos encontrados")
         for _, row in resultado.iterrows():
             with st.expander(f"🌾 {row['Nombre_comun']} — {row['Nombre_cientifico']}"):
                 col1, col2, col3 = st.columns(3)
@@ -202,30 +177,28 @@ with tab2:
                     st.write(f"**Req. nutricional:** {row['Req_nutricional']}")
                 with col3:
                     st.write(f"**Región:** {row['Region_Uruguay']}")
-                    st.write(f"**Sistema:** {row['Tipo_sistema']}")
+                    st.write(f"**Temp. óptima:** {row['Temp_optima_C']}°C")
                 if pd.notna(row["Compatible"]):
                     st.write(f"**Compañeras:** {row['Compatible'].replace(';', ', ')}")
+                if pd.notna(row["Incompatible"]):
+                    st.write(f"**Incompatibles:** {row['Incompatible'].replace(';', ', ')}")
                 if pd.notna(row["Observaciones"]):
                     st.caption(f"📝 {row['Observaciones']}")
 
 
 # --- TAB 3: POR SISTEMA ---
 with tab3:
-    sub1, sub2, sub3 = st.tabs([
-        "🥬 Hortícola",
-        "🌳 Agroforestal",
-        "🐄 Silvopastoril"
-    ])
+    sub1, sub2, sub3 = st.tabs(["🥬 Hortícola", "🌳 Agroforestal", "🐄 Silvopastoril"])
 
     with sub1:
         sistema_sel = st.radio(
-            "Tipo de sistema hortícola",
+            "Tipo de sistema",
             ["Todos", "Hortícola", "Policultivo"],
             horizontal=True
         )
 
         if sistema_sel == "Todos":
-            df_sist = cultivos.copy()
+            df_sist = cultivos[~cultivos["Tipo_sistema"].str.contains("intensivo", na=False)]
         else:
             df_sist = cultivos[cultivos["Tipo_sistema"].str.contains(sistema_sel, na=False)]
 
@@ -244,7 +217,7 @@ with tab3:
                     st.write(f"**Estación:** {row['Estacion_siembra']}")
                 with col3:
                     st.write(f"**Región:** {row['Region_Uruguay']}")
-                    st.metric("Temp. óptima", f"{row['Temp_optima_C']}°C")
+                    st.write(f"**Temp. óptima:** {row['Temp_optima_C']}°C")
                 if pd.notna(row["Compatible"]):
                     st.write(f"**Compañeras:** {row['Compatible'].replace(';', ', ')}")
                 if pd.notna(row["Incompatible"]):
@@ -253,16 +226,19 @@ with tab3:
                     st.caption(f"📝 {row['Observaciones']}")
 
     with sub2:
-        funcion_agro = st.multiselect(
-            "Filtrar por función",
-            agroforestales["Funcion_principal"].unique().tolist(),
-            default=[]
-        )
-        region_agro = st.multiselect(
-            "Filtrar por región",
-            ["Sur", "Litoral", "Norte", "Este", "Todo Uruguay"],
-            default=[]
-        )
+        col_f, col_r = st.columns(2)
+        with col_f:
+            funcion_agro = st.multiselect(
+                "Filtrar por función",
+                sorted(agroforestales["Funcion_principal"].unique().tolist()),
+                default=[]
+            )
+        with col_r:
+            region_agro = st.multiselect(
+                "Filtrar por región",
+                ["Sur", "Litoral", "Norte", "Este", "Todo Uruguay"],
+                default=[]
+            )
 
         df_agro = agroforestales.copy()
         if funcion_agro:
@@ -294,15 +270,27 @@ with tab3:
                     st.caption(f"📝 {row['Observaciones']}")
 
     with sub3:
-        animal_sel = st.multiselect(
-            "Filtrar por animal",
-            silvopastoril["Animal"].unique().tolist(),
-            default=[]
-        )
+        col_a, col_r2 = st.columns(2)
+        with col_a:
+            animal_sel = st.multiselect(
+                "Filtrar por animal",
+                sorted(silvopastoril["Animal"].unique().tolist()),
+                default=[]
+            )
+        with col_r2:
+            region_silvo = st.multiselect(
+                "Filtrar por región",
+                ["Sur", "Litoral", "Norte", "Este", "Todo Uruguay"],
+                default=[]
+            )
 
         df_silvo = silvopastoril.copy()
         if animal_sel:
             df_silvo = df_silvo[df_silvo["Animal"].isin(animal_sel)]
+        if region_silvo:
+            df_silvo = df_silvo[df_silvo["Region_Uruguay"].apply(
+                lambda x: any(r in str(x) for r in region_silvo)
+            )]
 
         st.caption(f"{len(df_silvo)} sistemas encontrados")
 
@@ -329,15 +317,28 @@ with tab3:
 # --- TAB 4: PLANTAS FUNCIONALES ---
 with tab4:
     st.markdown("#### 🌸 Plantas funcionales y aromáticas")
-    st.caption("Plantas que cumplen roles específicos en el sistema: repelentes, atractoras de polinizadores, nematicidas, etc.")
+    st.caption("Plantas que cumplen roles específicos: repelentes, atractoras de polinizadores, nematicidas, etc.")
 
-    funcion_sel = st.multiselect(
-        "Filtrar por función",
-        funcionales["Funcion_principal"].unique().tolist(),
-        default=[]
-    )
+    col_f1, col_f2 = st.columns(2)
+    with col_f1:
+        funcion_sel = st.multiselect(
+            "Filtrar por función",
+            sorted(funcionales["Funcion_principal"].unique().tolist()),
+            default=[]
+        )
+    with col_f2:
+        polinizador_sel = st.selectbox(
+            "¿Atrae polinizadores?",
+            ["Todos", "Sí", "No"]
+        )
 
-    df_func = funcionales if not funcion_sel else funcionales[funcionales["Funcion_principal"].isin(funcion_sel)]
+    df_func = funcionales.copy()
+    if funcion_sel:
+        df_func = df_func[df_func["Funcion_principal"].isin(funcion_sel)]
+    if polinizador_sel != "Todos":
+        df_func = df_func[df_func["Atrae_polinizadores"] == polinizador_sel]
+
+    st.caption(f"{len(df_func)} plantas encontradas")
 
     for _, row in df_func.iterrows():
         with st.expander(f"🌼 {row['Nombre']} — {row['Nombre_cientifico']}"):
@@ -346,12 +347,14 @@ with tab4:
                 st.write(f"**Función principal:** {row['Funcion_principal']}")
                 st.write(f"**Función secundaria:** {row['Funcion_secundaria']}")
                 st.write(f"**Mecanismo:** {row['Mecanismo']}")
+                st.write(f"**Estación:** {row['Estacion']}")
             with col2:
                 st.write(f"**Atrae polinizadores:** {row['Atrae_polinizadores']}")
                 if pd.notna(row["Polinizadores_especificos"]):
                     st.write(f"**Polinizadores:** {row['Polinizadores_especificos']}")
                 if pd.notna(row["Control_plagas"]):
-                    st.write(f"**Controla:** {row['Control_plagas']}")
+                    st.write(f"**Controla plagas:** {row['Control_plagas']}")
+                st.write(f"**Región:** {row['Region_Uruguay']}")
             if pd.notna(row["Observaciones"]):
                 st.caption(f"📝 {row['Observaciones']}")
 
@@ -360,25 +363,47 @@ with tab4:
 with tab5:
     st.markdown("#### 🔍 Tabla de compatibilidades")
 
-    relacion_sel = st.radio(
-        "Mostrar",
-        ["Todas", "Solo positivas", "Solo negativas"],
-        horizontal=True
-    )
+    col_r, col_i, col_s = st.columns(3)
+    with col_r:
+        relacion_sel = st.radio(
+            "Relación",
+            ["Todas", "Solo positivas", "Solo negativas"],
+            horizontal=True
+        )
+    with col_i:
+        intensidad_sel = st.multiselect(
+            "Intensidad",
+            ["Fuerte", "Media"],
+            default=[]
+        )
+    with col_s:
+        sistema_compat = st.multiselect(
+            "Sistema",
+            sorted(compatibilidades["Sistema"].unique().tolist()),
+            default=[]
+        )
 
     df_compat = compatibilidades.copy()
     if relacion_sel == "Solo positivas":
         df_compat = df_compat[df_compat["Relacion"] == "Positiva"]
     elif relacion_sel == "Solo negativas":
         df_compat = df_compat[df_compat["Relacion"] == "Negativa"]
+    if intensidad_sel:
+        df_compat = df_compat[df_compat["Intensidad"].isin(intensidad_sel)]
+    if sistema_compat:
+        df_compat = df_compat[df_compat["Sistema"].apply(
+            lambda x: any(s in str(x) for s in sistema_compat)
+        )]
+
+    st.caption(f"{len(df_compat)} relaciones encontradas")
 
     for _, row in df_compat.iterrows():
         icono = "✅" if row["Relacion"] == "Positiva" else "❌"
-        with st.expander(f"{icono} {row['Especie_A']} + {row['Especie_B']} ({row['Intensidad']})"):
+        with st.expander(f"{icono} {row['Especie_A']} + {row['Especie_B']} — {row['Intensidad']}"):
             st.write(f"**Mecanismo:** {row['Mecanismo']}")
             col1, col2 = st.columns(2)
             with col1:
                 st.write(f"**Beneficio para {row['Especie_A']}:** {row['Beneficio_A']}")
             with col2:
                 st.write(f"**Beneficio para {row['Especie_B']}:** {row['Beneficio_B']}")
-            st.caption(f"Sistema: {row['Sistema']} · Fuente: {row['Fuente']}")
+            st.caption(f"Sistema: {row['Sistema']} · 📚 {row['Fuente']}")
