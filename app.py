@@ -237,7 +237,7 @@ with tab3:
             region_agro = st.multiselect(
                 "Filtrar por región",
                 ["Sur", "Litoral", "Norte", "Este", "Todo Uruguay"],
-                default=[]
+                default=[],
                 key="region_agro"
             )
 
@@ -282,7 +282,7 @@ with tab3:
             region_silvo = st.multiselect(
                 "Filtrar por región",
                 ["Sur", "Litoral", "Norte", "Este", "Todo Uruguay"],
-                default=[]
+                default=[],
                 key="region_silvo"
             )
 
