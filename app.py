@@ -76,6 +76,7 @@ st.markdown("""
         <span>🌳 Sistemas agroforestales</span>
         <span>🐄 Sistemas silvopastoriles</span>
         <span>🔍 Compatibilidades</span>
+        <span>📅 Estaciones</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
