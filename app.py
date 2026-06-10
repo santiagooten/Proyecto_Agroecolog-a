@@ -74,6 +74,7 @@ st.markdown("""
         <span>🌿 Cultivos hortícolas</span>
         <span>🌸 Plantas funcionales</span>
         <span>🌳 Sistemas agroforestales</span>
+        <span>🐄 Sistemas silvopastoriles</span>
         <span>🔍 Compatibilidades</span>
     </div>
 </div>
