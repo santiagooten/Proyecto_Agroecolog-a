@@ -238,6 +238,7 @@ with tab3:
                 "Filtrar por región",
                 ["Sur", "Litoral", "Norte", "Este", "Todo Uruguay"],
                 default=[]
+                key="region_agro"
             )
 
         df_agro = agroforestales.copy()
@@ -282,6 +283,7 @@ with tab3:
                 "Filtrar por región",
                 ["Sur", "Litoral", "Norte", "Este", "Todo Uruguay"],
                 default=[]
+                key="region_silvo"
             )
 
         df_silvo = silvopastoril.copy()
