@@ -50,6 +50,10 @@ st.markdown("""
         <span>🔍 Compatibilidades</span>
         <span>📅 Estaciones</span>
     </div>
+    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.25); font-size: 0.85rem; opacity: 0.85;">
+        <span style="font-weight: 600;">Proyecto Integrador · Agricultura Orgánica y Agroecología</span><br>
+        <span style="opacity: 0.9;">Elaborado por Macarena Macarin, Agustina Martínez, Paulina Beltramelli y Santiago Oten</span>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
